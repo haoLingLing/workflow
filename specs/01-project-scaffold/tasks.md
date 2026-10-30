@@ -1,0 +1,43 @@
+# 项目基础框架 - 任务清单
+
+> 状态说明：`[ ]` 未完成，`[✅]` 已完成
+
+- [ ] 1. 初始化后端工程
+  - [ ] 1.1 创建 NestJS + TypeScript 工程，配置 ESLint/Prettier
+  - [ ] 1.2 接入 @nestjs/config，按 `.env.development` / `.env.production` 区分配置
+  - 涉及文件：`server/`
+  - 对应需求：FR-1
+- [ ] 2. 接入 MySQL 与 Redis
+  - [ ] 2.1 配置 TypeORM 连接 MySQL 8，建立 `BaseEntity`
+  - [ ] 2.2 配置 Redis 客户端（ioredis）并封装 `RedisService`
+  - [ ] 2.3 实现 `GET /api/health`
+  - 涉及文件：`server/src/common/entities/base.entity.ts`、`server/src/modules/health/`
+  - 对应需求：FR-1
+- [ ] 3. 统一响应与异常处理
+  - [ ] 3.1 实现 `TransformInterceptor` 包装成功响应
+  - [ ] 3.2 实现 `BizException` 与全局 `HttpExceptionFilter`
+  - [ ] 3.3 启用全局 `ValidationPipe`，校验失败转换为 40000
+  - 涉及文件：`server/src/common/`
+  - 对应需求：FR-2、FR-5
+- [ ] 4. 分页约定
+  - 实现 `PageQueryDto`（page ≥ 1，1 ≤ pageSize ≤ 100）与分页结果工具函数
+  - 涉及文件：`server/src/common/dto/page-query.dto.ts`
+  - 对应需求：FR-3
+- [ ] 5. 初始化前端工程
+  - [ ] 5.1 创建 Vue 3 + TS + Vite 工程，接入 Element Plus、Pinia、Vue Router
+  - [ ] 5.2 配置 vue-i18n 与 `locales/zh-CN.ts`
+  - [ ] 5.3 配置 Vite 开发代理 `/api` → 后端
+  - 涉及文件：`web/`
+  - 对应需求：FR-4
+- [ ] 6. 前端请求封装
+  - 实现 `web/src/api/request.ts`，统一处理非 0 code 的错误提示
+  - 对应需求：FR-4
+- [ ] 7. 基础布局与通用组件
+  - [ ] 7.1 实现 Sidebar / Header / Breadcrumb / AppMain 布局
+  - [ ] 7.2 实现 `ConfirmButton` 与 `SearchTable` 通用组件
+  - 涉及文件：`web/src/layout/`、`web/src/components/`
+  - 对应需求：FR-4
+- [ ] 8. 编写测试并通过
+  - [ ] 8.1 后端：拦截器、异常过滤器、分页 DTO 单测；health e2e
+  - [ ] 8.2 前端：request 拦截器单测
+  - 对应需求：FR-1、FR-2、FR-3、FR-4

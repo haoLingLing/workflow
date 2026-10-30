@@ -1,0 +1,43 @@
+# 角色与权限 - 任务清单
+
+> 状态说明：`[ ]` 未完成，`[✅]` 已完成
+
+- [ ] 1. 角色相关表与种子数据
+  - [ ] 1.1 创建 `RoleEntity`、`sys_role_menu`、`sys_user_role` 与迁移脚本
+  - [ ] 1.2 种子数据：系统管理员、部门管理员、普通员工三个内置角色及默认菜单授权
+  - 涉及文件：`server/src/modules/role/`、`server/src/database/seeds/role.seed.ts`
+  - 对应需求：FR-1、FR-6
+- [ ] 2. 角色增删改查接口
+  - [ ] 2.1 实现分页列表、下拉、详情
+  - [ ] 2.2 实现新增/编辑（编码唯一）、启停
+  - [ ] 2.3 实现删除（已分配用户时拒绝）
+  - 对应需求：FR-1
+- [ ] 3. 菜单授权接口
+  - 实现 `PUT /api/roles/:id/menus`（事务内先删后插）
+  - 对应需求：FR-2
+- [ ] 4. 权限计算与缓存
+  - [ ] 4.1 实现 `PermissionService.getUserAuthz`（权限并集、忽略停用角色、超级管理员特判、数据范围取最大值）
+  - [ ] 4.2 实现 `evictByRole` / `evictUser`，在角色修改、授权、启停、删除后调用
+  - 涉及文件：`server/src/modules/permission/permission.service.ts`
+  - 对应需求：FR-4、FR-5
+- [ ] 5. 接口鉴权
+  - [ ] 5.1 实现 `@RequirePermission()` 装饰器与全局 `PermissionGuard`
+  - [ ] 5.2 为 03-department、04-menu 及本模块的接口加上权限标识
+  - 对应需求：FR-4
+- [ ] 6. 数据范围
+  - 实现 `DataScopeService.apply` 与 `@DataScope()` 使用约定
+  - 涉及文件：`server/src/modules/permission/data-scope.service.ts`
+  - 对应需求：FR-3
+- [ ] 7. 接入已有接口
+  - [ ] 7.1 `/api/auth/me` 返回 roles、permissions
+  - [ ] 7.2 `/api/menus/routes` 按用户权限过滤
+  - 对应需求：FR-4
+- [ ] 8. 前端角色管理页
+  - [ ] 8.1 实现分页表格、编辑弹窗（含数据范围单选）、启停开关
+  - [ ] 8.2 实现分配权限抽屉（树形勾选，提交时包含半选父节点）
+  - 涉及文件：`web/src/views/system/role/`、`web/src/api/role.ts`
+  - 对应需求：FR-1、FR-2、FR-3
+- [ ] 9. 编写测试并通过
+  - [ ] 9.1 单测：权限并集、数据范围合并、DataScopeService 各分支
+  - [ ] 9.2 e2e：无权限 403、改权限即时生效、删除已分配角色失败
+  - 对应需求：FR-1 ~ FR-6

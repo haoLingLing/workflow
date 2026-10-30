@@ -1,0 +1,47 @@
+# 登录与认证 - 任务清单
+
+> 状态说明：`[ ]` 未完成，`[✅]` 已完成
+
+- [ ] 1. 用户核心表与初始化数据
+  - [ ] 1.1 创建 `UserEntity`（sys_user 核心字段）与迁移脚本
+  - [ ] 1.2 编写种子脚本：根据 `ADMIN_INIT_PASSWORD` 创建内置 `admin`，`must_change_password = 1`
+  - 涉及文件：`server/src/modules/user/user.entity.ts`、`server/src/database/seeds/`
+  - 对应需求：FR-9
+- [ ] 2. 图形验证码
+  - 实现 `GET /api/auth/captcha`（svg-captcha），验证码存 Redis 120s，校验时 GETDEL
+  - 涉及文件：`server/src/modules/auth/captcha.service.ts`
+  - 对应需求：FR-1
+- [ ] 3. 登录与失败锁定
+  - [ ] 3.1 实现 `POST /api/auth/login`：校验验证码 → 锁定检查 → bcrypt 比较 → 状态检查
+  - [ ] 3.2 实现失败计数与锁定（默认 5 次 / 15 分钟，读取参数的接口预留）
+  - [ ] 3.3 签发访问令牌与刷新令牌，刷新令牌写入 Redis
+  - [ ] 3.4 发出 `auth.login` 事件
+  - 涉及文件：`server/src/modules/auth/auth.service.ts`、`auth.controller.ts`
+  - 对应需求：FR-2、FR-3
+- [ ] 4. 全局鉴权守卫
+  - [ ] 4.1 实现 `JwtAuthGuard` 与 `@Public()`、`@CurrentUser()` 装饰器，注册为全局守卫
+  - [ ] 4.2 实现黑名单、tokenVersion、mustChangePassword 校验
+  - 涉及文件：`server/src/modules/auth/guards/`、`server/src/common/decorators/`
+  - 对应需求：FR-4、FR-6、FR-8
+- [ ] 5. 刷新、退出与强制下线
+  - [ ] 5.1 实现 `POST /api/auth/refresh`（轮换刷新令牌）
+  - [ ] 5.2 实现 `POST /api/auth/logout`
+  - [ ] 5.3 实现 `AuthService.revokeAllTokens(userId)` 并导出给其他模块
+  - 对应需求：FR-4、FR-5、FR-6
+- [ ] 6. 当前用户与修改密码
+  - [ ] 6.1 实现 `GET /api/auth/me`
+  - [ ] 6.2 实现 `PUT /api/auth/password`：校验旧密码、密码规则，成功后清除 mustChangePassword 并 revokeAllTokens
+  - 对应需求：FR-7、FR-8
+- [ ] 7. 前端登录流程
+  - [ ] 7.1 实现登录页（验证码点击刷新、失败自动刷新）
+  - [ ] 7.2 实现 `stores/auth.ts`
+  - [ ] 7.3 `request.ts` 注入令牌，并实现 401 单例刷新与请求重放
+  - [ ] 7.4 路由守卫：未登录跳登录页，mustChangePassword 强制跳改密页
+  - [ ] 7.5 实现改密页，顶栏用户菜单接入"退出登录"
+  - 涉及文件：`web/src/views/login/`、`web/src/views/change-password/`、`web/src/stores/auth.ts`、`web/src/router/guard.ts`
+  - 对应需求：FR-2、FR-4、FR-5、FR-7、FR-8
+- [ ] 8. 编写测试并通过
+  - [ ] 8.1 单测：密码规则、锁定逻辑、守卫拒绝分支
+  - [ ] 8.2 e2e：登录 → me → 退出 → 401；5 次失败锁定；刷新令牌轮换
+  - [ ] 8.3 前端：并发 401 只刷新一次
+  - 对应需求：FR-1 ~ FR-9
